@@ -111,7 +111,7 @@ describe '#{title_classified}', :day#{day} do
 
   skip 'should be able to handle example data for part two' do
     ex = with_data('fixtures/example.txt')
-    expect(ex.calc_part_one).to eq(0)
+    expect(ex.calc_part_two).to eq(0)
   end
 
   skip 'should be able to handle input data for part two' do
