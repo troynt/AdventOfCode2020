@@ -20,11 +20,6 @@ describe 'ReportRepair', :day1 do
     expect(ex.calc_part_one).to eq(646779)
   end
 
-  skip 'should be able to handle example data for part two' do
-    ex = with_data('fixtures/example.txt')
-    expect(ex.calc_part_one).to eq(0)
-  end
-
   it 'should be able to handle input data for part two' do
     ex = with_data('fixtures/input.txt')
     expect(ex.calc_part_two).to eq(246191688)
