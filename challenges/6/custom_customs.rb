@@ -20,9 +20,8 @@ class CustomCustom
   end
 
   def letter_counts(word)
-    word.chars.reduce({}) do |acc, c|
-      acc[c] = acc[c].nil? ? 1 : acc[c] + 1
-      acc
+    word.chars.each_with_object(Hash.new(0)) do |c, h|
+      h[c] += 1
     end
   end
 
