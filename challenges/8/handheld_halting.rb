@@ -46,15 +46,13 @@ class HandheldHalting
   def calc_part_two
     @prog.each_with_index do |line, i|
       cur_ins, _ = line
-      tmp = @prog.map(&:dup)
-      case cur_ins
-      when :nop
-        tmp[i][0] = :jmp
-      when :jmp
-        tmp[i][0] = :nop
-      else
+      if cur_ins != :jmp && cur_ins != :nop
         next
       end
+
+      tmp = @prog.map(&:dup)
+      tmp[i][0] = cur_ins == :jmp ? :nop : :jmp
+
       begin
         acc = run!(tmp)
         return acc
