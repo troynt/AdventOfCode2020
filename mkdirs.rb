@@ -71,8 +71,8 @@ require 'pry'
 
 # https://adventofcode.com/#{YEAR}/day/#{day}
 class #{title_classified}
-  def initialize(nums)
-    @nums = nums
+  def initialize(lines)
+    @lines = lines
   end
 
   def calc_part_one
@@ -94,9 +94,9 @@ describe '#{title_classified}', :day#{day} do
   def with_data(file_path)
     cur_dir = File.dirname(__FILE__)
     f = File.open(File.join(cur_dir, file_path))
-    nums = f.readlines.map(&:to_i)
+    lines = f.readlines.map(&:strip)
 
-    #{title_classified}.new(nums)
+    #{title_classified}.new(lines)
   end
 
   skip 'should be able to handle example data for part one' do
