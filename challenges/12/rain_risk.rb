@@ -85,8 +85,3 @@ class RainRisk
     @pos.to_a.map(&:abs).sum.round
   end
 end
-
-# bad guesses
-# 1415
-#
-# answer is 521
