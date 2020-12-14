@@ -99,7 +99,7 @@ describe '#{title_classified}', :day#{day} do
     #{title_classified}.new(lines)
   end
 
-  skip 'should be able to handle example data for part one' do
+  it 'should be able to handle example data for part one' do
     ex = with_data('fixtures/example.txt')
     expect(ex.calc_part_one).to eq(0)
   end
@@ -124,6 +124,10 @@ end
 
   create_file_if_missing(File.join(path, "fixtures", "input.txt")) do |f|
     f.puts get_input(YEAR, day)
+  end
+
+  create_file_if_missing(File.join(path, "fixtures", "example.txt")) do |f|
+    f.puts ""
   end
 end
 
