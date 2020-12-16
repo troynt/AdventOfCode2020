@@ -84,7 +84,7 @@ class TicketTranslation
     end
 
     final = []
-    while final.reject(&:nil?).length < your_ticket.length
+    while rule_indexes.length > 0
       rule_indexes.select {|_, v| v.length == 1 }.each do |rule, v|
         idx = v.first
         final[idx] = rule
