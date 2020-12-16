@@ -11,44 +11,20 @@ class RambunctiousRecitation
   def calc_part_one(goal)
     when_spoken = Hash.new
 
-    @nums.each_with_index { |val, idx| record_spoken(val, idx + 1, when_spoken) }
+    @nums.each_with_index { |val, idx| when_spoken[val] = idx + 1 }
 
-    round = @nums.length + 1
-    last_spoken = @nums.last
-    loop do
-      found = when_spoken[last_spoken]
-      if found.nil?
-        last_spoken = 0
-      else
-        if found.length > 1
-          a = found[-2]
-          b = found[-1]
-          last_spoken = b - a
-        else
-          last_spoken = 0
-        end
-      end
-
-      record_spoken(last_spoken, round, when_spoken)
-
-      break if round == goal
-
-      round += 1
+    spoken = @nums.last
+    (@nums.length + 1).upto(goal).each do |round|
+      last_spoken = spoken
+      found = when_spoken[spoken]
+      spoken = found.nil? ? 0 : round - 1 - found
+      when_spoken[last_spoken] = round - 1
     end
 
-    last_spoken
+    spoken
   end
 
   def calc_part_two
     calc_part_one(30_000_000)
-  end
-
-  def record_spoken(num, round, hash)
-    # puts num
-    if hash.key?(num)
-      hash[num] << round
-    else
-      hash[num] = [round]
-    end
   end
 end
