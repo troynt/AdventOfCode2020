@@ -10,12 +10,6 @@ describe 'ConwayCube', :day17 do
     ConwayCube.new(lines)
   end
 
-  it 'should be able to encode and decode pos' do
-    ex = with_data('fixtures/example.txt')
-    expect(ex.str_to_pos("1,2,3")).to eq(Vector[1,2,3])
-    expect(ex.pos_to_str(Vector[1,2,3])).to eq("1,2,3")
-  end
-
   it 'should be able to handle example data for part one' do
     ex = with_data('fixtures/example.txt')
     expect(ex.calc_part_one).to eq(112)
