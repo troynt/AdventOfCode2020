@@ -3,6 +3,9 @@ require 'awesome_print'
 require 'pry'
 require 'matrix'
 
+ACTIVE = "#".to_sym
+INACTIVE = ".".to_sym
+
 class Tile
   attr_reader(
     :state,
@@ -19,7 +22,7 @@ class Tile
   end
 
   def active?
-    state == "#"
+    state == ACTIVE
   end
 
   def key
@@ -41,27 +44,19 @@ class ConwayCube
   def initialize(lines)
     @width = lines.first.length
     @tiles = Hash.new do |h, k|
-      Tile.new(".", k)
+      Tile.new(INACTIVE, k)
     end
     lines.each_with_index do |row, y|
       row.chars.each_with_index do |state, x|
         pos = Vector[x,y,0,0]
-        t = Tile.new(state, pos)
+        t = Tile.new(state.to_sym, pos)
         @tiles[t.key] = t
       end
     end
 
     @dirs = []
-    (-1..1).each do |z|
-      (-1..1).each do |y|
-        (-1..1).each do |x|
-          next if x == 0 && y == 0 && z == 0
-          @dirs << Vector[x,y,z,0]
-        end
-      end
-    end
-
     @dirs4 = []
+
     (-1..1).each do |z|
       (-1..1).each do |y|
         (-1..1).each do |x|
@@ -69,6 +64,9 @@ class ConwayCube
             next if x == 0 && y == 0 && z == 0 && w == 0
             @dirs4 << Vector[x,y,z,w]
           end
+
+          next if x == 0 && y == 0 && z == 0
+          @dirs << Vector[x,y,z,0]
         end
       end
     end
@@ -87,7 +85,9 @@ class ConwayCube
   end
 
   def persist!(tile)
-    @tiles[tile.key] = tile unless @tiles.has_key?(tile.key) # ensure it is persisted
+    return if @tiles.has_key?(tile.key)
+
+    @tiles[tile.key] = tile
   end
 
   def tick!
@@ -100,12 +100,13 @@ class ConwayCube
       tiles.map {|_, t| neighbors_at(t.pos, dirs, neighbor_cache) + [t] }.flatten.uniq.each do |t|
         neighbors = neighbors_at(t.pos, dirs, neighbor_cache)
         active_neighbors = neighbors.select(&:active?)
+        active_neighbor_count = active_neighbors.length
         if t.active?
-          t.next_state = (active_neighbors.length == 2 || active_neighbors.length == 3) ? "#" : "."
+          t.next_state = (active_neighbor_count == 2 || active_neighbor_count == 3) ? ACTIVE : INACTIVE
         else
-          t.next_state= active_neighbors.length == 3 ? "#" : "."
+          t.next_state= active_neighbor_count == 3 ? ACTIVE : INACTIVE
         end
-        persist!(t)
+        persist!(t) if t.next_state == ACTIVE
       end
       tick!
       neighbor_cache = {}
