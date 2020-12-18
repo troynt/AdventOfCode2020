@@ -6,6 +6,25 @@ require 'matrix'
 ACTIVE = "#".to_sym
 INACTIVE = ".".to_sym
 
+DIRS = []
+DIRS4 = []
+
+(-1..1).each do |z|
+  (-1..1).each do |y|
+    (-1..1).each do |x|
+      (-1..1).each do |w|
+        next if x == 0 && y == 0 && z == 0 && w == 0
+        DIRS4 << Vector[x,y,z,w]
+      end
+
+      next if x == 0 && y == 0 && z == 0
+      DIRS << Vector[x,y,z,0]
+    end
+  end
+end
+DIRS.freeze
+DIRS4.freeze
+
 class Tile
   attr_reader(
     :state,
@@ -50,24 +69,7 @@ class ConwayCube
       row.chars.each_with_index do |state, x|
         pos = Vector[x,y,0,0]
         t = Tile.new(state.to_sym, pos)
-        @tiles[t.key] = t
-      end
-    end
-
-    @dirs = []
-    @dirs4 = []
-
-    (-1..1).each do |z|
-      (-1..1).each do |y|
-        (-1..1).each do |x|
-          (-1..1).each do |w|
-            next if x == 0 && y == 0 && z == 0 && w == 0
-            @dirs4 << Vector[x,y,z,w]
-          end
-
-          next if x == 0 && y == 0 && z == 0
-          @dirs << Vector[x,y,z,0]
-        end
+        persist!(t) if t.active?
       end
     end
   end
@@ -97,6 +99,7 @@ class ConwayCube
   def run!(cycles, dirs)
     neighbor_cache = {}
     cycles.times do
+      # not the most efficient way to do this. Under time constraints though.
       tiles.map {|_, t| neighbors_at(t.pos, dirs, neighbor_cache) + [t] }.flatten.uniq.each do |t|
         neighbors = neighbors_at(t.pos, dirs, neighbor_cache)
         active_neighbors = neighbors.select(&:active?)
@@ -114,12 +117,12 @@ class ConwayCube
   end
 
   def calc_part_one
-    run!(6, @dirs)
+    run!(6, DIRS)
     tiles.values.select(&:active?).length
   end
 
   def calc_part_two
-    run!(6, @dirs4)
+    run!(6, DIRS4)
     tiles.values.select(&:active?).length
   end
 end
