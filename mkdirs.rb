@@ -48,13 +48,13 @@ end
 
 
 available_challenge_dirs = Set.new (1..25).map { |i| Date.new(YEAR, 12, i) }.select {|x| x <= Date.today }.map(&:day)
-existing_challenge_dirs = Set.new Dir.glob('challenges/**').map { |x| x.gsub('challenges/', '').to_i }.select { |x| x > 0 }
+existing_challenge_dirs = Set.new Dir.glob('days/**').map { |x| x.gsub('days/', '').to_i }.select { |x| x > 0 }
 
 missing = (available_challenge_dirs - existing_challenge_dirs)
 # missing = (available_challenge_dirs) # uncomment to recreate all
 
 missing.to_a.sort.reverse.each do |day|
-  path = File.join(File.dirname(__FILE__), "challenges", "#{day}");
+  path = File.join(File.dirname(__FILE__), "days", "#{day}");
   title = get_title(YEAR, day)
 
   return if title.nil?
